@@ -35,9 +35,6 @@ import java.util.Hashtable;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
-    public Hashtable<String, String> contactList;
-    public String[] nameList;
-
     /**
      * Remember the position of the selected item.
      */
@@ -67,8 +64,27 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
+    public Hashtable<String, String> contactList;
+    public String[] nameList;
+    public void recreateContactsList() {
+        contactList = fetchContacts();
+        nameList = new String[contactList.size()];
+        int i = 0;
+        for (Enumeration<String> e = contactList.elements(); e.hasMoreElements(); ) {
+            nameList[i] = e.nextElement();
+            i++;
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        recreateContactsList();
+    }
+
     public NavigationDrawerFragment() {
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,12 +123,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        contactList = fetchContacts();
-        nameList = new String[contactList.size()];
-        int i = 0; for (Enumeration<String> e = contactList.elements(); e.hasMoreElements();) {
-            nameList[i] = e.nextElement();
-            i++;
-        }
+        recreateContactsList();
 
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
@@ -260,10 +271,10 @@ public class NavigationDrawerFragment extends Fragment {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_example) {
+        /*if (item.getItemId() == R.id.action_example) {
             Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         mTitle = "Contact";
         if (!mNavigationDrawerFragment.contactList.isEmpty()) {
-            mTitle = mNavigationDrawerFragment.nameList[number];
+            mTitle = mNavigationDrawerFragment.nameList[number-1];
         }
     }
 
