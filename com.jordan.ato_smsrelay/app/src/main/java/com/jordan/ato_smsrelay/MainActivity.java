@@ -2,8 +2,12 @@ package com.jordan.ato_smsrelay;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -36,6 +40,20 @@ public class MainActivity extends ActionBarActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    // used to store the settings value
+    public Boolean enableDebug = false;
+    public void loadSettings() {
+        // Load the settings
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        enableDebug = sharedPrefs.getBoolean("debugEnable",false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadSettings();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +137,9 @@ public class MainActivity extends ActionBarActivity
                     }
                 }
 
-                Log.v("SMS DEBUG:", msgCurrent);
+                if(enableDebug) {
+                    Log.v("SMS DEBUG:", msgCurrent);
+                }
                 msgData += "\n" + msgCurrent;
 
                 cursor.moveToNext();
@@ -136,7 +156,12 @@ public class MainActivity extends ActionBarActivity
         if (!mNavigationDrawerFragment.contactList.isEmpty()) {
             mTitle = mNavigationDrawerFragment.nameList[number - 1];
 
-             importFromSMS(Uri.parse("content://sms/inbox"));
+            new Thread(new Runnable() {
+                public void run() {
+                    importFromSMS(Uri.parse("content://sms/inbox"));
+                }
+            }).start();
+
             //importFromSMS(Uri.parse("content://sms/sent"));
         }
     }
@@ -169,12 +194,13 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**

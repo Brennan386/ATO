@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Settings" >
+        <SwitchPreference android:title="Enable debug"
+            android:key="debugEnable"
+            android:summary="Enable debug logcat output" />
+    </PreferenceCategory>
+</PreferenceScreen>
