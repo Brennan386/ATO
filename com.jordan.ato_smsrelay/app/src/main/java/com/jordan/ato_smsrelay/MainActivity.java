@@ -1,8 +1,10 @@
 package com.jordan.ato_smsrelay;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -59,25 +61,74 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
+    public String getContactID(Context context, String phoneNumber) {
+        ContentResolver cr = context.getContentResolver();
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(phoneNumber));
+        Cursor cursor = cr.query(uri,
+                new String[] { ContactsContract.PhoneLookup._ID }, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        String contactID = null;
+        if (cursor.moveToFirst()) {
+            contactID = cursor.getString(cursor
+                    .getColumnIndex(ContactsContract.PhoneLookup._ID));
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactID;
+    }
+
+    public String convertInternationalNumberToLocal(String international){
+            return international.replace("+44","0"); // TODO: make this work for all country codes...
+    }
+
     private String importFromSMS(Uri location) {
         // public static final String INBOX = "content://sms/inbox";
         // public static final String SENT = "content://sms/sent";
         // public static final String DRAFT = "content://sms/draft";
         Cursor cursor = getContentResolver().query(location, null, null, null, null);
 
+        String msgData = "";
         if (cursor.moveToFirst()) { // must check the result to prevent exception
             do {
-                String msgData = "";
+                String msgCurrent = "";
                 for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
-                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+                    if (cursor.getColumnName(idx).equals("person")) {
+                        String address = cursor.getString(cursor.getColumnIndex("address"));
+                        if (address!=null) {
+                            String number = convertInternationalNumberToLocal(address);
+                            String name = new String();
+                            if (number != null) {
+                                String ID = getContactID(getApplicationContext(), number);
+                                if (ID != null) {
+                                    name = mNavigationDrawerFragment.contactList.get(ID);
+                                }
+                            }
+                            if (name != null) {
+                                msgCurrent += " person:" + name;
+                            }
+                        }
+                    } else if (cursor.getColumnName(idx).equals("address")){
+                        msgCurrent += " address:" + convertInternationalNumberToLocal(cursor.getString(idx));
+                    }
+                    else {
+                        msgCurrent += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+                    }
                 }
-                // use msgData
-                return msgData;
-            } while (cursor.moveToNext());
+
+                Log.v("SMS DEBUG:", msgCurrent);
+                msgData += "\n" + msgCurrent;
+
+                cursor.moveToNext();
+            } while (!cursor.isLast());
         } else {
             // empty box, no SMS
             return "";
         }
+        return msgData;
     }
 
     public void onSectionAttached(int number) {
@@ -85,8 +136,8 @@ public class MainActivity extends ActionBarActivity
         if (!mNavigationDrawerFragment.contactList.isEmpty()) {
             mTitle = mNavigationDrawerFragment.nameList[number - 1];
 
-            Log.v("SMS DEBUG:",importFromSMS(Uri.parse("content://sms/inbox")));
-            importFromSMS(Uri.parse("content://sms/sent"));
+             importFromSMS(Uri.parse("content://sms/inbox"));
+            //importFromSMS(Uri.parse("content://sms/sent"));
         }
     }
 
