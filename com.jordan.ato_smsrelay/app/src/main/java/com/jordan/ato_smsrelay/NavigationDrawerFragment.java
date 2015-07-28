@@ -1,5 +1,9 @@
 package com.jordan.ato_smsrelay;
 
+import android.annotation.SuppressLint;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -21,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.provider.ContactsContract;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -57,6 +62,38 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+
+    /*
+     * Defines an array that contains column names to move from
+     * the Cursor to the ListView.
+     */
+    @SuppressLint("InlinedApi")
+    private final static String[] FROM_COLUMNS = {
+            Build.VERSION.SDK_INT
+                    >= Build.VERSION_CODES.HONEYCOMB ?
+                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
+                    ContactsContract.Contacts.DISPLAY_NAME
+    };
+    /*
+     * Defines an array that contains resource ids for the layout views
+     * that get the Cursor column contents. The id is pre-defined in
+     * the Android framework, so it is prefaced with "android.R.id"
+     */
+    private final static int[] TO_IDS = {
+            android.R.id.text1
+    };
+    // Define global mutable variables
+    // Define a ListView object
+    ListView mContactsList;
+    // Define variables for the contact the user selects
+    // The contact's _ID value
+    long mContactId;
+    // The contact's LOOKUP_KEY
+    String mContactKey;
+    // A content URI for the selected contact
+    Uri mContactUri;
+    // An adapter that binds the result Cursor to the ListView
+    private SimpleCursorAdapter mCursorAdapter;
 
     public NavigationDrawerFragment() {
     }
@@ -101,6 +138,9 @@ public class NavigationDrawerFragment extends Fragment {
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
+
+
+                /* TODO: ADD Contacts here */
                 new String[]{
                         getString(R.string.title_section1),
                         getString(R.string.title_section2),
