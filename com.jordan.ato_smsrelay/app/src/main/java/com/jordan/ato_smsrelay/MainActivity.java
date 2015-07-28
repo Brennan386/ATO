@@ -1,6 +1,8 @@
 package com.jordan.ato_smsrelay;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,10 +59,34 @@ public class MainActivity extends ActionBarActivity
                 .commit();
     }
 
+    private String importFromSMS(Uri location) {
+        // public static final String INBOX = "content://sms/inbox";
+        // public static final String SENT = "content://sms/sent";
+        // public static final String DRAFT = "content://sms/draft";
+        Cursor cursor = getContentResolver().query(location, null, null, null, null);
+
+        if (cursor.moveToFirst()) { // must check the result to prevent exception
+            do {
+                String msgData = "";
+                for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
+                    msgData += " " + cursor.getColumnName(idx) + ":" + cursor.getString(idx);
+                }
+                // use msgData
+                return msgData;
+            } while (cursor.moveToNext());
+        } else {
+            // empty box, no SMS
+            return "";
+        }
+    }
+
     public void onSectionAttached(int number) {
         mTitle = "Contact";
         if (!mNavigationDrawerFragment.contactList.isEmpty()) {
-            mTitle = mNavigationDrawerFragment.nameList[number-1];
+            mTitle = mNavigationDrawerFragment.nameList[number - 1];
+
+            Log.v("SMS DEBUG:",importFromSMS(Uri.parse("content://sms/inbox")));
+            importFromSMS(Uri.parse("content://sms/sent"));
         }
     }
 
