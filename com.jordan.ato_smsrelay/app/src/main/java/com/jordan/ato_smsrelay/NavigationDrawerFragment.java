@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -305,9 +304,6 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     public Hashtable <String, String> fetchContacts() {
-        String phoneNumber = null;
-        String email = null;
-
         Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
         String _ID = ContactsContract.Contacts._ID;
         String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
@@ -326,8 +322,10 @@ public class NavigationDrawerFragment extends Fragment {
                     contacts.put(contact_id,cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
                 }
             }
+            cursor.close();
             return contacts;
         } else {
+            cursor.close();
             return new Hashtable();
         }
     }
