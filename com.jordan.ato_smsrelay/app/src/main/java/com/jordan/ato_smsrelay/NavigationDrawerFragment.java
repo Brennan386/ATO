@@ -35,6 +35,8 @@ import java.util.Hashtable;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+    public Hashtable<String, String> contactList;
+    public String[] nameList;
 
     /**
      * Remember the position of the selected item.
@@ -105,8 +107,8 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        Hashtable<String, String> contactList = fetchContacts();
-        String[] nameList = new String[contactList.size()];
+        contactList = fetchContacts();
+        nameList = new String[contactList.size()];
         int i = 0; for (Enumeration<String> e = contactList.elements(); e.hasMoreElements();) {
             nameList[i] = e.nextElement();
             i++;
