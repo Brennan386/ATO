@@ -1,9 +1,9 @@
 package com.jordan.ato_smsrelay;
 
-import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -25,7 +25,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.provider.ContactsContract;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -62,38 +64,6 @@ public class NavigationDrawerFragment extends Fragment {
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-
-    /*
-     * Defines an array that contains column names to move from
-     * the Cursor to the ListView.
-     */
-    @SuppressLint("InlinedApi")
-    private final static String[] FROM_COLUMNS = {
-            Build.VERSION.SDK_INT
-                    >= Build.VERSION_CODES.HONEYCOMB ?
-                    ContactsContract.Contacts.DISPLAY_NAME_PRIMARY :
-                    ContactsContract.Contacts.DISPLAY_NAME
-    };
-    /*
-     * Defines an array that contains resource ids for the layout views
-     * that get the Cursor column contents. The id is pre-defined in
-     * the Android framework, so it is prefaced with "android.R.id"
-     */
-    private final static int[] TO_IDS = {
-            android.R.id.text1
-    };
-    // Define global mutable variables
-    // Define a ListView object
-    ListView mContactsList;
-    // Define variables for the contact the user selects
-    // The contact's _ID value
-    long mContactId;
-    // The contact's LOOKUP_KEY
-    String mContactKey;
-    // A content URI for the selected contact
-    Uri mContactUri;
-    // An adapter that binds the result Cursor to the ListView
-    private SimpleCursorAdapter mCursorAdapter;
 
     public NavigationDrawerFragment() {
     }
@@ -134,18 +104,19 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+
+        Hashtable<String, String> contactList = fetchContacts();
+        String[] nameList = new String[contactList.size()];
+        int i = 0; for (Enumeration<String> e = contactList.elements(); e.hasMoreElements();) {
+            nameList[i] = e.nextElement();
+            i++;
+        }
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-
-
-                /* TODO: ADD Contacts here */
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
+                nameList));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
     }
@@ -318,5 +289,33 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    public Hashtable <String, String> fetchContacts() {
+        String phoneNumber = null;
+        String email = null;
+
+        Uri CONTENT_URI = ContactsContract.Contacts.CONTENT_URI;
+        String _ID = ContactsContract.Contacts._ID;
+        String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
+
+        ContentResolver contentResolver = getActivity().getApplicationContext().getContentResolver();
+
+        Cursor cursor = contentResolver.query(CONTENT_URI, null, null, null, null);
+        Hashtable <String, String> contacts = new Hashtable();
+
+        // Loop for every contact in the phone
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+
+                String contact_id = cursor.getString(cursor.getColumnIndex( _ID ));
+                if (contact_id!=null) {
+                    contacts.put(contact_id,cursor.getString(cursor.getColumnIndex(DISPLAY_NAME)));
+                }
+            }
+            return contacts;
+        } else {
+            return new Hashtable();
+        }
     }
 }
