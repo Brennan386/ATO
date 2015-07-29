@@ -23,6 +23,10 @@
             android:name=".SettingsActivity"
             android:label="@string/action_settings" >
         </activity>
+        <activity
+            android:name=".ThemeListActivity"
+            android:label="Theme List" >
+        </activity>
     </application>
 
 </manifest>
