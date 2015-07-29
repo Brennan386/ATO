@@ -22,9 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
+import com.jordan.ato_smsrelay.ThemeListFragment.OnFragmentInteractionListener;
+
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        ThemeListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -159,8 +162,8 @@ public class MainActivity extends ActionBarActivity
 
             //importFromSMS(Uri.parse("content://sms/sent"));
 
-            Intent ThemeList = new Intent(MainActivity.this, ThemeListActivity.class);
-            startActivity(ThemeList);
+            //Intent ThemeList = new Intent(MainActivity.this, ThemeListActivity.class);
+            //startActivity(ThemeList);
         }
     }
 
@@ -240,4 +243,9 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    public void onFragmentInteraction (String id) {
+        // The theme list was attached, fill it...
+    }
+
 }
