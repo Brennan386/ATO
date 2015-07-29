@@ -1,19 +1,26 @@
 package com.jordan.ato_smsrelay;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-
 import com.jordan.ato_smsrelay.dummy.DummyContent;
+
+import java.util.List;
+import java.util.Vector;
 
 /**
  * A fragment representing a list of Items.
@@ -25,6 +32,16 @@ import com.jordan.ato_smsrelay.dummy.DummyContent;
  * interface.
  */
 public class ThemeListFragment extends Fragment implements AbsListView.OnItemClickListener {
+    public List<String> themeList = new Vector<String>();
+    public String[] getThemeList() {
+        String[] temp = new String[themeList.size()];
+        for (int i=0; i!=(themeList.size()-1); i++) temp[i] = themeList.get(i);
+        return temp;
+    }
+
+    public void addTheme(String theme) {
+        themeList.add(theme);
+    }
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,14 +86,16 @@ public class ThemeListFragment extends Fragment implements AbsListView.OnItemCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        addTheme("Misc");
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, getThemeList());
     }
 
     @Override
@@ -90,6 +109,13 @@ public class ThemeListFragment extends Fragment implements AbsListView.OnItemCli
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+        final Button add = (Button) getActivity().findViewById(R.id.AddTheme);
+        add.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+            }
+        });
 
         return view;
     }
