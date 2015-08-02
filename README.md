@@ -14,4 +14,15 @@ the end result should be interesting in my opinion.
 * WordNet 3.0 ; https://wordnet.princeton.edu
 * JAWS (Java API for WordNet Searching) ; http://lyle.smu.edu/~tspell/jaws/index.html
 
+## To Do:
 
+* Incorperate WordNetquery into ATO
+* Finish Field/Theme creation, editing and removal
+* Uninstall Database setting (If you want to remove the app and all linked data)
+* Expolding texts to query all related words individually
+* Automatically sort texts into defined fields
+* Allow manual moving of texts
+* Displaying texts
+* Possibly look into being able to send texts as well
+* A few small misc tasks to polish it up
+* Yay...
