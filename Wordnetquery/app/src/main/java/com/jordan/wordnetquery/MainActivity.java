@@ -30,9 +30,6 @@ public class MainActivity extends ActionBarActivity {
      * Main entry point. The command-line arguments are concatenated together
      * (separated by spaces) and used as the word form to look up.
      */
-    public String Output = new String ();
-    public String FormOut = new String ();
-    public String SynOut = new String ();
 
     public void outputText(String wordForm)
     {
@@ -42,6 +39,8 @@ public class MainActivity extends ActionBarActivity {
         //  Display the word forms and definitions for synsets retrieved
         if (synsets.length > 0)
         {
+            String Output = new String ();
+            String FormOut = new String ();
             for (int i = 0; i < synsets.length; i++)
             {
                 System.out.println("");
@@ -51,8 +50,8 @@ public class MainActivity extends ActionBarActivity {
                     FormOut = ((j > 0 ? ", " : "") +
                             wordForms[j]);
                 }
-                SynOut = (": " + synsets[i].getDefinition());
-                Output = (FormOut + " " + SynOut + "\n");
+                String SynOut = (": " + synsets[i].getDefinition());
+                Output += (FormOut + " " + SynOut + "\n");
             }
 
             EditText textBox = (EditText) findViewById(R.id.OutputTxt);
@@ -122,7 +121,8 @@ public class MainActivity extends ActionBarActivity {
                 Thread dlThread = new Thread(new Runnable() {
                     public void run() {
                         Log.d("com.jordan.wordnetquery","Download begin");
-                        downloadFile("https://www.dropbox.com/s/qojp3bqbolhf9cb/WordNet-3.0.zip?dl=1", out);                    }
+                        downloadFile("https://www.dropbox.com/s/qojp3bqbolhf9cb/WordNet-3.0.zip?dl=1", out);
+                    }
                 }); dlThread.start(); dlThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -133,10 +133,10 @@ public class MainActivity extends ActionBarActivity {
             Decompress d = new Decompress(zipFile, unzipLocation);
             d.unzip();
 
-            //out.delete()
+            out.delete();
         }
         else {
-            //
+            // it exists, dir has database...
         }
     }
 
