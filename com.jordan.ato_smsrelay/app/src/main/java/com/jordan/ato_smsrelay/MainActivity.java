@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.jordan.ato_smsrelay.ThemeListFragment.OnFragmentInteractionListener;
 
@@ -246,6 +248,7 @@ public class MainActivity extends ActionBarActivity
 
     public void onFragmentInteraction (String id) {
         // The theme list was attached, fill it...
+
     }
 
 }

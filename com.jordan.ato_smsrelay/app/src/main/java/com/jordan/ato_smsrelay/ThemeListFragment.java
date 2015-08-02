@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jordan.ato_smsrelay.dummy.DummyContent;
 
@@ -95,7 +96,7 @@ public class ThemeListFragment extends Fragment implements AbsListView.OnItemCli
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, getThemeList());
+                R.id.container, R.id.empty, getThemeList());
     }
 
     @Override
@@ -114,6 +115,8 @@ public class ThemeListFragment extends Fragment implements AbsListView.OnItemCli
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
+                Toast.makeText(getActivity().getApplicationContext(), "AddButton",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -25,31 +25,6 @@
                      android:layout_height="match_parent" >-->
 
         <!--</FrameLayout>-->
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ThemeAdd"
-            android:id="@+id/AddTheme"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button2"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button3"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"/>
-
     </RelativeLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

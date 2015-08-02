@@ -112,35 +112,31 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
 
-
         File f = new File(dataDir+File.separator+"WordNet-3.0");
         if (!(f.exists()&&f.isDirectory())){
             f.mkdirs();
-            final File out = new File(dataDir);
-
+            String zipFile = dataDir + File.separator + "WordNet-3.0.zip";
+            final File out = new File(zipFile);
 
             try {
-                new Thread(new Runnable() {
+                Thread dlThread = new Thread(new Runnable() {
                     public void run() {
                         Log.d("com.jordan.wordnetquery","Download begin");
-                        downloadFile("https://www.dropbox.com/s/qojp3bqbolhf9cb/WordNet-3.0.zip?dl=1", out);
-                    }
-                }).join(); //thread.start();
+                        downloadFile("https://www.dropbox.com/s/qojp3bqbolhf9cb/WordNet-3.0.zip?dl=1", out);                    }
+                }); dlThread.start(); dlThread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            String zipFile = dataDir + File.separator + "WordNet-3.0.zip";
             String unzipLocation = dataDir + File.separator;
 
             Decompress d = new Decompress(zipFile, unzipLocation);
             d.unzip();
 
-
-
-            File zip = new File(zipFile);
-            //zip.delete()
-
+            //out.delete()
+        }
+        else {
+            //
         }
     }
 
