@@ -23,6 +23,7 @@ public class Decompress {
 
     public void unzip() {
         try  {
+            
             FileInputStream fin = new FileInputStream(_zipFile);
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry ze = null;
@@ -33,8 +34,15 @@ public class Decompress {
                     _dirChecker(ze.getName());
                 } else {
                     FileOutputStream fout = new FileOutputStream(_location + ze.getName());
-                    for (int c = zin.read(); c != -1; c = zin.read()) {
+                    /*for (int c = zin.read(); c != -1; c = zin.read()) {
                         fout.write(c);
+                    }*/
+                    BufferedInputStream in = new BufferedInputStream(zin);
+                    BufferedOutputStream out = new BufferedOutputStream(fout);
+                    byte b[] = new byte[1024];
+                    int n;
+                    while ((n = in.read(b,0,1024)) >= 0) {
+                        out.write(b,0,n);
                     }
 
                     zin.closeEntry();
