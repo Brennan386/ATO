@@ -26,3 +26,6 @@ the end result should be interesting in my opinion.
 * Possibly look into being able to send texts as well
 * A few small misc tasks to polish it up
 * Yay...
+
+
+Please note: at the end of this we (me and Violet) will probably be dead as this is a 100% Java Project... We already feel like corpses...
