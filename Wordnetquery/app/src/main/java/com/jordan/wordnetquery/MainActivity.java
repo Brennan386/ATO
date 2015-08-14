@@ -31,6 +31,14 @@ public class MainActivity extends ActionBarActivity {
      * (separated by spaces) and used as the word form to look up.
      */
 
+    private void DeleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                DeleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+
     public void outputText(String wordForm)
     {
         //  Get the synsets containing the word form
@@ -81,6 +89,15 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if (id==R.id.action_delete) {
+            // delete the wordnet db stuff...
+            ContextWrapper c = new ContextWrapper(this);
+            String dataDir = c.getApplicationContext().getFilesDir().getAbsolutePath();
+            File f = new File(dataDir+File.separator+"WordNet-3.0");
+            DeleteRecursive(f.getAbsoluteFile());
+            this.finish();
+            System.exit(0);
         }
 
         return super.onOptionsItemSelected(item);
